@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="baseColor">#be95c4</color>
+    <color name="linearLayoutBgColor">#eae4e9</color>
+    <color name="baseTxtColor">#f4f3ee</color>
+    <color name="btnTxtColor">#e7c6ff</color>
+    <color name="appNameColor">#5e548e</color>
 </resources>
