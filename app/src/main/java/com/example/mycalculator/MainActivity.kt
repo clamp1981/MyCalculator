@@ -22,49 +22,75 @@ class MainActivity : AppCompatActivity(){
     private var btnNine : Button? = null
 
     //그외
+    private var btnDot : Button? = null
     private var btnClear : Button? = null
+
+    private var isLastNumber :Boolean = false
+    private var isUsedDot : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         tvInput = findViewById(R.id.tvInput)
-        btnZero = findViewById(R.id.btnZero)
-        btnZero?.setOnClickListener(clickedListener)
 
+        btnZero = findViewById(R.id.btnZero)
+        btnZero?.setOnClickListener(numberlicBtnClickedListener)
         btnOne = findViewById(R.id.btnOne)
-        btnOne?.setOnClickListener(clickedListener)
+        btnOne?.setOnClickListener(numberlicBtnClickedListener)
         btnTwo = findViewById(R.id.btnTwo)
-        btnTwo?.setOnClickListener(clickedListener)
+        btnTwo?.setOnClickListener(numberlicBtnClickedListener)
         btnThree = findViewById(R.id.btnThree)
-        btnThree?.setOnClickListener(clickedListener)
+        btnThree?.setOnClickListener(numberlicBtnClickedListener)
         btnFour = findViewById(R.id.btnFour)
-        btnFour?.setOnClickListener(clickedListener)
+        btnFour?.setOnClickListener(numberlicBtnClickedListener)
         btnFive = findViewById(R.id.btnFive)
-        btnFive?.setOnClickListener(clickedListener)
+        btnFive?.setOnClickListener(numberlicBtnClickedListener)
         btnSix = findViewById(R.id.btnSix)
-        btnSix?.setOnClickListener(clickedListener)
+        btnSix?.setOnClickListener(numberlicBtnClickedListener)
         btnSeven = findViewById(R.id.btnSeven)
-        btnSeven?.setOnClickListener(clickedListener)
+        btnSeven?.setOnClickListener(numberlicBtnClickedListener)
         btnEight = findViewById(R.id.btnEight)
-        btnEight?.setOnClickListener(clickedListener)
+        btnEight?.setOnClickListener(numberlicBtnClickedListener)
         btnNine = findViewById(R.id.btnNine)
-        btnNine?.setOnClickListener(clickedListener)
+        btnNine?.setOnClickListener(numberlicBtnClickedListener)
+
+
+        btnDot = findViewById(R.id.btnDot)
+        btnDot?.setOnClickListener(operationBtnClickedListener)
+
         btnClear = findViewById(R.id.btnClear)
-        btnClear?.setOnClickListener(clickedListener)
+        btnClear?.setOnClickListener(operationBtnClickedListener)
 
         initInputData()
     }
 
     private fun initInputData(){
         tvInput?.text = ""
+        isUsedDot = false
     }
 
-    private val clickedListener: View.OnClickListener = View.OnClickListener {
+    private val operationBtnClickedListener: View.OnClickListener = View.OnClickListener {
         if( it.id == R.id.btnClear )
             initInputData()
-        else
-            tvInput?.append((it as Button).text)
+        else if( it.id == R.id.btnDot ) {
+            if(isLastNumber && isUsedDot ) {
+                tvInput?.append((it as Button).text)
+                isUsedDot = true
+            }else if( tvInput?.text == "" )
+                tvInput?.append( "0" + (it as Button).text)
+        }
+
+        isLastNumber = false
+
+    }
+
+
+    private val numberlicBtnClickedListener: View.OnClickListener = View.OnClickListener {
+
+        isLastNumber = true
+        tvInput?.append((it as Button).text)
+
 
     }
 
