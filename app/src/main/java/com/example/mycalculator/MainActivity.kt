@@ -92,19 +92,13 @@ class MainActivity : AppCompatActivity(){
 
     }
 
-    private  fun chkNum(str: String) : Boolean {
-        var temp: Char
+    private  fun checkNumber( temp : Char) : Boolean {
         var result = true
-        for (i in 0 until str.length) {
-            temp = str.elementAt(i)
-            if (temp.toInt() < 48 || temp.toInt() > 57) {
-                result = false
-            }
+        if (temp.code < 48 || temp.code  > 57) {
+            result = false
         }
         return result
     }
-
-
 
     private val operationBtnClickedListener: View.OnClickListener = View.OnClickListener {
         if( it.id == R.id.btnClear )
@@ -118,21 +112,51 @@ class MainActivity : AppCompatActivity(){
                 isUsedDot = true
             }
 
+            isLastNumber = false
+
         }
         else if( it.id == R.id.btnEqual ){
-            var arrayText : CharArray = tvInput?.text.toString().toCharArray()
+            if(isLastNumber && !isUsedDot ){
+                var tvValue : String = tvInput?.text.toString()
+                var prefix : String = "";
+                try {
+                    if( tvValue.startsWith("-") ){
+                        prefix = "-";
+                        tvValue = tvValue.substring(1)
+                    }
+
+                    if( tvValue.contains("-") ){
+                        val splitValue = tvValue.split("-")
+                        var leftValue = splitValue[0].toDouble()
+                        var rightValue = splitValue[1].toDouble()
+                        if( prefix.isNotEmpty()){
+                            leftValue *= -1
+                        }
+
+                        tvInput?.text = (leftValue - rightValue).toString()
+                        isLastNumber = true
+                    }
+
+
+                }catch (e: ArithmeticException ){
+                    e.printStackTrace()
+                }
+
+            }
+
 
         }
         else{
             if( isLastNumber ) {
                 isUsedDot = false
                 tvInput?.append( (it as Button).text)
+                isLastNumber = false
             }
 
         }
 
 
-        isLastNumber = false
+
 
     }
 
