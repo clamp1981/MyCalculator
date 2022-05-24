@@ -2,7 +2,7 @@ package com.example.mycalculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.TextView
 
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(){
 
     private var isLastNumber :Boolean = false
     private var isUsedDot : Boolean = false
+    private var isUsedOperation : Boolean = false
 
 
 
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity(){
         btnMultiply = findViewById(R.id.btnMultiply)
         btnMultiply?.setOnClickListener(operationBtnClickedListener)
         btnEqual = findViewById(R.id.btnEqual)
-        btnEqual?.setOnClickListener(operationBtnClickedListener)
+        btnEqual?.setOnClickListener(equalBtnClickedListener)
 
         btnClear = findViewById(R.id.btnClear)
         btnClear?.setOnClickListener(operationBtnClickedListener)
@@ -92,15 +93,17 @@ class MainActivity : AppCompatActivity(){
 
     }
 
-    private  fun checkNumber( temp : Char) : Boolean {
-        var result = true
-        if (temp.code < 48 || temp.code  > 57) {
-            result = false
+    private fun displayResultValue( dValue : Double ){
+        var displayValue = dValue.toString()
+        val value : String = dValue.toString().substring( dValue.toString().length - 2 )
+        if(value == ".0"){
+            displayValue = displayValue.substring( 0, displayValue.length - 2  )
         }
-        return result
+
+        tvInput?.text = displayValue
     }
 
-    private val operationBtnClickedListener: View.OnClickListener = View.OnClickListener {
+    private val operationBtnClickedListener: OnClickListener = OnClickListener {
         if( it.id == R.id.btnClear )
             initInputData()
         else if( it.id == R.id.btnDot ) {
@@ -115,42 +118,12 @@ class MainActivity : AppCompatActivity(){
             isLastNumber = false
 
         }
-        else if( it.id == R.id.btnEqual ){
-            if(isLastNumber && !isUsedDot ){
-                var tvValue : String = tvInput?.text.toString()
-                var prefix : String = "";
-                try {
-                    if( tvValue.startsWith("-") ){
-                        prefix = "-";
-                        tvValue = tvValue.substring(1)
-                    }
-
-                    if( tvValue.contains("-") ){
-                        val splitValue = tvValue.split("-")
-                        var leftValue = splitValue[0].toDouble()
-                        var rightValue = splitValue[1].toDouble()
-                        if( prefix.isNotEmpty()){
-                            leftValue *= -1
-                        }
-
-                        tvInput?.text = (leftValue - rightValue).toString()
-                        isLastNumber = true
-                    }
-
-
-                }catch (e: ArithmeticException ){
-                    e.printStackTrace()
-                }
-
-            }
-
-
-        }
         else{
-            if( isLastNumber ) {
+            if( isLastNumber && !isUsedOperation) {
                 isUsedDot = false
                 tvInput?.append( (it as Button).text)
                 isLastNumber = false
+                isUsedOperation = true
             }
 
         }
@@ -160,8 +133,75 @@ class MainActivity : AppCompatActivity(){
 
     }
 
+    private  val equalBtnClickedListener : OnClickListener = OnClickListener {
 
-    private val numberBtnClickedListener: View.OnClickListener = View.OnClickListener {
+        if(isLastNumber && !isUsedDot ){
+
+            var tvValue : String = tvInput?.text.toString()
+            var prefix = ""
+            try {
+                if( tvValue.startsWith("-") ){
+                    prefix = "-"
+                    tvValue = tvValue.substring(1)
+                }
+
+                if( tvValue.contains("-") ){
+                    val splitValue = tvValue.split("-")
+                    var leftValue = splitValue[0].toDouble()
+                    val rightValue = splitValue[1].toDouble()
+                    if( prefix.isNotEmpty()){
+                        leftValue *= -1
+                    }
+
+                    displayResultValue ( leftValue - rightValue )
+
+                }
+                else if( tvValue.contains("+") ) {
+                    val splitValue = tvValue.split("+")
+                    var leftValue = splitValue[0].toDouble()
+                    val rightValue = splitValue[1].toDouble()
+                    if( prefix.isNotEmpty()){
+                        leftValue *= -1
+                    }
+
+                    displayResultValue ( leftValue + rightValue )
+                }
+                else if( tvValue.contains("*") ) {
+                    val splitValue = tvValue.split("*")
+                    var leftValue = splitValue[0].toDouble()
+                    val rightValue = splitValue[1].toDouble()
+                    if( prefix.isNotEmpty()){
+                        leftValue *= -1
+                    }
+
+                    displayResultValue ( leftValue * rightValue )
+                }
+                else if( tvValue.contains("/") ) {
+                    val splitValue = tvValue.split("/")
+                    var leftValue = splitValue[0].toDouble()
+                    val rightValue = splitValue[1].toDouble()
+                    if( prefix.isNotEmpty()){
+                        leftValue *= -1
+                    }
+
+                    displayResultValue ( leftValue / rightValue )
+                }
+
+                isLastNumber = true
+                isUsedOperation = false
+
+
+            }catch (e: ArithmeticException ){
+                e.printStackTrace()
+            }
+
+
+
+        }
+    }
+
+
+    private val numberBtnClickedListener: OnClickListener = OnClickListener {
 
         isLastNumber = true
         tvInput?.append((it as Button).text)
