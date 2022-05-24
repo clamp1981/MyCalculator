@@ -144,49 +144,48 @@ class MainActivity : AppCompatActivity(){
                     prefix = "-"
                     tvValue = tvValue.substring(1)
                 }
+                var leftValue : Double
+                var rightValue: Double 
 
-                if( tvValue.contains("-") ){
-                    val splitValue = tvValue.split("-")
-                    var leftValue = splitValue[0].toDouble()
-                    val rightValue = splitValue[1].toDouble()
-                    if( prefix.isNotEmpty()){
-                        leftValue *= -1
+                when{
+                    (tvValue.contains("-")) -> {
+                        val splitValue = tvValue.split("-")
+                        leftValue = splitValue[0].toDouble()
+                        rightValue= splitValue[1].toDouble()
+                        if( prefix.isNotEmpty()){
+                            leftValue *= -1
+                        }
+                        displayResultValue ( leftValue - rightValue )
+                    }
+                    (tvValue.contains("+")) -> {
+                        val splitValue = tvValue.split("+")
+                        leftValue = splitValue[0].toDouble()
+                        rightValue= splitValue[1].toDouble()
+                        if( prefix.isNotEmpty()){
+                            leftValue *= -1
+                        }
+                        displayResultValue ( leftValue + rightValue )
+                    }
+                    (tvValue.contains("*")) -> {
+                        val splitValue = tvValue.split("*")
+                        leftValue = splitValue[0].toDouble()
+                        rightValue= splitValue[1].toDouble()
+                        if( prefix.isNotEmpty()){
+                            leftValue *= -1
+                        }
+                        displayResultValue ( leftValue * rightValue )
+                    }
+                    (tvValue.contains("/")) -> {
+                        val splitValue = tvValue.split("/")
+                        leftValue = splitValue[0].toDouble()
+                        rightValue= splitValue[1].toDouble()
+                        if( prefix.isNotEmpty()){
+                            leftValue *= -1
+                        }
+                        displayResultValue ( leftValue / rightValue )
                     }
 
-                    displayResultValue ( leftValue - rightValue )
-
                 }
-                else if( tvValue.contains("+") ) {
-                    val splitValue = tvValue.split("+")
-                    var leftValue = splitValue[0].toDouble()
-                    val rightValue = splitValue[1].toDouble()
-                    if( prefix.isNotEmpty()){
-                        leftValue *= -1
-                    }
-
-                    displayResultValue ( leftValue + rightValue )
-                }
-                else if( tvValue.contains("*") ) {
-                    val splitValue = tvValue.split("*")
-                    var leftValue = splitValue[0].toDouble()
-                    val rightValue = splitValue[1].toDouble()
-                    if( prefix.isNotEmpty()){
-                        leftValue *= -1
-                    }
-
-                    displayResultValue ( leftValue * rightValue )
-                }
-                else if( tvValue.contains("/") ) {
-                    val splitValue = tvValue.split("/")
-                    var leftValue = splitValue[0].toDouble()
-                    val rightValue = splitValue[1].toDouble()
-                    if( prefix.isNotEmpty()){
-                        leftValue *= -1
-                    }
-
-                    displayResultValue ( leftValue / rightValue )
-                }
-
                 isLastNumber = true
                 isUsedOperation = false
 
